@@ -4,9 +4,34 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Color switch</title>
+    <title>Countdown Timer</title>
+    <link rel="stylesheet" href="./styles.css">
   </head>
   <body>
-    <script src="./script.js" type="module"></script>
+    <p class="message" id="timer-title">Until <span id="timer-date"></span> left:</p>
+
+    <div class="timer" id="timer-1">
+      <div class="field">
+        <span class="value" data-value="days"></span>
+        <span class="label">Days</span>
+      </div>
+
+      <div class="field">
+        <span class="value" data-value="hours"></span>
+        <span class="label">Hours</span>
+      </div>
+
+      <div class="field">
+        <span class="value" data-value="mins"></span>
+        <span class="label">Minutes</span>
+      </div>
+
+      <div class="field">
+        <span class="value" data-value="secs"></span>
+        <span class="label">Seconds</span>
+      </div>
+    </div>
+
+    <script src="./script.js"></script>
   </body>
 </html>
