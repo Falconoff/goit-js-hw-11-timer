@@ -1,70 +1,80 @@
 'use strict';
 
-const refs = {
-  daysOutput: document.querySelector('[data-value="days"]'),
-  hoursOutput: document.querySelector('[data-value="hours"]'),
-  minsOutput: document.querySelector('[data-value="mins"]'),
-  secsOutput: document.querySelector('[data-value="secs"]'),
-  timerDate: document.querySelector('#timer-date'),
-};
+class CountdownTimer {
+  constructor({ selector, targetDate }) {
+    this.timerId = null;
+    this.targetDate = targetDate;
+    this.timerEl = selector;
+  }
+  start() {
+    // updates Countdown Timer once per second
+    this.timerId = setInterval(() => {
+      // calc difference between target and current time
+      const diff = this.targetDate.getTime() - Date.now();
 
-const targetDate = new Date(2022, 0, 1, 0, 0, 0);
-// const targetDate = new Date(2021, 9, 10, 16, 24, 20);
+      if (diff <= 0) {
+        this.stop;
+        return;
+      }
 
-refs.timerDate.innerHTML = showTargetDate(targetDate);
-
-// updates Countdown Timer once per second
-const timerId = setInterval(() => {
-  // calc difference between target and current time
-  const diff = targetDate.getTime() - Date.now();
-
-  if (diff <= 0) {
-    clearInterval(timerId);
-    showCountdownTimer({ days: '00', hours: '00', mins: '00', secs: '00' });
-    return;
+      // get time components from the time difference and then update
+      // values on the page
+      showCountdownTimer(this.getTimeComponents(diff), this.timerEl);
+    }, 1000);
   }
 
-  // get time components from the time difference and then update
-  // values on the page
-  showCountdownTimer(getTimeComponents(diff));
-}, 1000);
+  stop() {
+    clearInterval(this.timerId);
+    showCountdownTimer(
+      { days: '00', hours: '00', mins: '00', secs: '00' },
+      this.timerEl,
+    );
+  }
 
-// getting time components from
-function getTimeComponents(time) {
-  const days = pad(Math.floor(time / (1000 * 60 * 60 * 24)));
-  const hours = pad(
-    Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-  );
-  const mins = pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
-  const secs = pad(Math.floor((time % (1000 * 60)) / 1000));
+  // getting time components from
+  getTimeComponents(time) {
+    const days = this.pad(Math.floor(time / (1000 * 60 * 60 * 24)));
+    const hours = this.pad(
+      Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+    );
+    const mins = this.pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
+    const secs = this.pad(Math.floor((time % (1000 * 60)) / 1000));
 
-  return { days, hours, mins, secs };
+    return { days, hours, mins, secs };
+  }
+
+  // add '0' if num < 10
+  pad(num) {
+    return String(num).padStart(2, '0');
+  }
 }
 
-// add '0' if num < 10
-function pad(num) {
-  return String(num).padStart(2, '0');
-}
+const timer = new CountdownTimer({
+  selector: '#timer-1',
+  targetDate: new Date(2021, 9, 11, 2, 44, 0),
+});
+timer.start();
 
 // show Countdown Timer
-function showCountdownTimer(timeComponenstObj) {
+function showCountdownTimer(timeComponenstObj, selector) {
   const { days, hours, mins, secs } = timeComponenstObj;
-  refs.daysOutput.innerHTML = days;
-  refs.hoursOutput.innerHTML = hours;
-  refs.minsOutput.innerHTML = mins;
-  refs.secsOutput.innerHTML = secs;
-}
-
-// returns target date/time String in the format "year/month/date hh:mm:ss"
-function showTargetDate(targetDate) {
-  // console.log(targetDate);
-  let targetDateString = '';
-  targetDateString += targetDate.getFullYear() + '/';
-  targetDateString += pad(targetDate.getMonth() + 1) + '/';
-  targetDateString += pad(targetDate.getDate()) + ' ';
-  targetDateString += pad(targetDate.getHours()) + ':';
-  targetDateString += pad(targetDate.getMinutes()) + ':';
-  targetDateString += pad(targetDate.getSeconds());
-
-  return targetDateString;
+  const timerEl = document.querySelector(`${selector}`);
+  const timerString = `
+    <div class="field">
+      <span class="value" data-value="days">${days}</span>
+      <span class="label">Days</span>
+    </div>
+    <div class="field">
+      <span class="value" data-value="hours">${hours}</span>
+      <span class="label">Hours</span>
+    </div>
+    <div class="field">
+      <span class="value" data-value="mins">${mins}</span>
+      <span class="label">Minutes</span>
+    </div>
+    <div class="field">
+      <span class="value" data-value="secs">${secs}</span>
+      <span class="label">Seconds</span>
+    </div>`;
+  timerEl.innerHTML = timerString;
 }
