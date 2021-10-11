@@ -13,7 +13,7 @@ class CountdownTimer {
       const diff = this.targetDate.getTime() - Date.now();
 
       if (diff <= 0) {
-        this.stop;
+        this.stop();
         return;
       }
 
@@ -25,6 +25,7 @@ class CountdownTimer {
 
   stop() {
     clearInterval(this.timerId);
+
     showCountdownTimer(
       { days: '00', hours: '00', mins: '00', secs: '00' },
       this.timerEl,
@@ -49,9 +50,11 @@ class CountdownTimer {
   }
 }
 
+// ------------- class end ----------------------
+
 const timer = new CountdownTimer({
   selector: '#timer-1',
-  targetDate: new Date(2021, 9, 11, 2, 44, 0),
+  targetDate: new Date(2022, 0, 1, 0, 0, 0),
 });
 timer.start();
 
