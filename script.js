@@ -32,7 +32,7 @@ class CountdownTimer {
     );
   }
 
-  // getting time components from
+  // getting time components from Time
   getTimeComponents(time) {
     const days = this.pad(Math.floor(time / (1000 * 60 * 60 * 24)));
     const hours = this.pad(
